@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/res/gaps.dart';
 import 'package:flutter_app/widgets/api/WanAndroidApi.dart';
 import 'package:flutter_app/widgets/api/util/dio_util.dart';
 import 'package:flutter_app/widgets/login/LoginItem.dart';
@@ -65,8 +66,10 @@ class _MyHomePageState extends State<MyHomePage> {
         body: new SingleChildScrollView(
             padding: EdgeInsets.only(top: 40, bottom: 40),
             child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Avatar(),
+                Gaps.vGap24,
                 LoginItem(
                     hintText: "wanAndroid账号",
                     controller: accountController,
@@ -99,8 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _login() {
     LoginRepository().login(
-        new LoginBody(_account, _pwd)).then((userBeanData) {
-      print("=======>${userBeanData.errorCode}");
+        new LoginBody("nbwzlyd", "1378wanandroid")).then((userBeanData) {
       if (userBeanData.errorCode == -1) {
         Toast.show(
             userBeanData.errorMsg, context, duration: Toast.LENGTH_SHORT,
