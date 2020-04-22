@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _login() {
     LoginRepository().login(
-        new LoginBody("", "")).then((userBeanData) {
+        new LoginBody(_account, _pwd)).then((userBeanData) {
       if (userBeanData.errorCode == -1) {
         Toast.show(
             userBeanData.errorMsg, context, duration: Toast.LENGTH_SHORT,
