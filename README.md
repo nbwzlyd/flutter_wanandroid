@@ -1,16 +1,5 @@
-# flutter_app
+# flutter 玩安卓练手项目  flutter学习记录，未开发完成，bug多，代码不优雅,后续逐渐完善
+![这里随便写文字]("https://github.com/nbwzlyd/flutter_wanandroid/blob/master/lib/demoImage/2061587546206_.pic_hd.jpg")
+![这里随便写文字]("https://github.com/nbwzlyd/flutter_wanandroid/blob/master/lib/demoImage/2071587546207_.pic_hd.jpg")
 
-A new Flutter application.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
