@@ -7,43 +7,23 @@ import 'package:flutter_app/widgets/main/bean/BannerBean.dart';
 import 'package:flutter_app/widgets/main/repository/main_repository.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-class HomeBannerWidget extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return new BannerState();
-  }
-}
-
-class BannerState extends State<StatefulWidget> {
-  BannerBean data;
-
-  @override
-  void initState() {
-    super.initState();
-    _getBanner();
-  }
+class HomeBannerWidget extends StatelessWidget {
+  HomeBannerWidget(this.data, {Key key}) : super(key: key);
+  final BannerBean data;
 
   @override
   Widget build(BuildContext context) {
-    if(data!=null && data.data!=null) {
+    if (data != null && data.data != null) {
       return bannerItem(data.data);
-    }else{
+    } else {
       return Container();
     }
-  }
-
-  void _getBanner() {
-    BannerRepository().getBanner().then((bannerBean) {
-      setState(() {
-        data = bannerBean;
-      });
-    });
   }
 }
 
 Widget bannerItem(List<Data> data) {
   return AspectRatio(
-    aspectRatio: 2,
+    aspectRatio: 16/9,
     child: Swiper(
       itemCount: data == null ? 0 : data.length,
       itemBuilder: (BuildContext context, int index) {

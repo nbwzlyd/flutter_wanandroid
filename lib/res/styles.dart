@@ -74,4 +74,8 @@ class TextStyles {
     fontSize: Dimens.font_sp14,
     color: Colours.dark_unselected_item_color
   );
+  static const TextStyle textHint10 = const TextStyle(
+      fontSize: Dimens.font_sp10,
+      color: Colours.dark_unselected_item_color
+  );
 }

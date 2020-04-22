@@ -1,59 +1,112 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/res/colors.dart';
+import 'package:flutter_app/res/dimens.dart';
 import 'package:flutter_app/res/gaps.dart';
+import 'package:flutter_app/res/styles.dart';
+import 'package:flutter_app/widgets/main/bean/ContentEntity.dart';
 
-class ContentWidget extends StatefulWidget {
+class ContentWidget extends StatelessWidget {
+  ContentWidget(this.entity, this.index, {Key key}) : super(key: key);
+  final ContentEntity entity;
+  final int index;
+
+  String _getUser() {
+    if (entity == null || entity.data == null) {
+      return "";
+    }
+
+    if (entity.data.datas[index].author == null ||
+        entity.data.datas[index].author.isEmpty) {
+      return entity.data.datas[index].shareUser;
+    }
+    return entity.data.datas[index].author;
+  }
+
   @override
-  State<StatefulWidget> createState() {
-    return new ContentState();
+  Widget build(BuildContext context) {
+    return Card(
+        elevation: 3,
+        margin: EdgeInsets.only(left: 12, right: 12, top: 8),
+        child: Container(
+            padding: EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Row(
+                          children: <Widget>[
+                            Text(_getUser(), style: TextStyles.textHint14),
+                            _buildTags(entity.data.datas[index].tags)
+                          ],
+                        ),
+                      ),
+                      Text(
+                        entity.data.datas[index].niceShareDate,
+                        style: TextStyles.textGray12,
+                      )
+                    ],
+                  ),
+                  Gaps.vGap4,
+                  Text(
+                    entity.data.datas[index].title,
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  Gaps.vGap10,
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Text(
+                        entity.data.datas[index].chapterName,
+                        style: TextStyles.textDarkGray14,
+                      )),
+                      Icon(
+                        Icons.favorite_border,
+                        color: Colors.grey,
+                      )
+                    ],
+                  )
+                ])));
   }
 }
 
-class ContentState extends State<StatefulWidget> {
+Widget _buildTags(List<Tags> tags) {
+  List<Widget> list = List();
+  tags.forEach((tag) {
+    list.add(BiaoQian(tag.name));
+  });
+  return new Row(
+    children: list,
+  );
+}
+
+class BiaoQian extends StatelessWidget {
+  BiaoQian(this.content, {Key key}) : super(key: key);
+  final String content;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        shape: BoxShape.rectangle,
-      ),
-      height: 80,
-      margin: EdgeInsets.only(left: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Icon(
-              Icons.favorite,
-              color: Colors.grey,
+    return new Row(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(left: 6),
+          height: 17,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              border: Border.all(color: Colours.red, width: 0.5)),
+          child: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(left: 2, right: 2),
+            child: Text(
+              content,
+              style: TextStyle(fontSize: Dimens.font_sp10, color: Colours.red),
             ),
           ),
-          Expanded(
-              child: InkWell(
-            child: Column(
-              children: <Widget>[
-                Text(
-                  "【扔物线】消失了半年，这个 Android 界的第一骚货终于回来了",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                Gaps.vGap12,
-                Row(
-                  children: <Widget>[
-                    Text("作者:xiaoyang"),
-                    Gaps.hGap8,
-                    Text("分类:干货资源"),
-                    Gaps.hGap8,
-                    Text("时间:刚刚"),
-                    Gaps.hGap8,
-                  ],
-                )
-              ],
-            ),
-          ))
-        ],
-      ),
+        )
+      ],
     );
   }
 }

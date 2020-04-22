@@ -15,15 +15,14 @@ class UserProfileState extends State<StatefulWidget> {
   Widget build(BuildContext context) {
     Widget userInfo = Container(
       width: double.infinity,
-      height: 250.0,
-      padding: EdgeInsets.fromLTRB(16, 26, 16, 0),
-      alignment: Alignment.center,
-      color: Colors.blueAccent,
+      height: 150.0,
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+      color: Colors.blue,
       child: UserProfileWidget(),
     );
 
     Widget listItems = Container(
-      margin: EdgeInsets.only(top: 230),
+      margin: EdgeInsets.only(top: 130),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
           color: Colors.white,

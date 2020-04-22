@@ -43,6 +43,7 @@ class WanAndroidApi {
     if (resType != null && resType.isNotEmpty) {
       sb.write('/$resType');
     }
+    print("getPath=====>${sb.toString()}");
     return sb.toString();
   }
 }
