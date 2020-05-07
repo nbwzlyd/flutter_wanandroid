@@ -37,7 +37,7 @@ class DioUtils {
   //metthod 请求方式
   //onSuccess 成功回调
   //onError 失败回调
-  static Future request<T>(String url,
+  static Future<dynamic> _request<T>(String url,
       {parameters,
       method}) async {
     Dio dio = createInstance();
@@ -55,6 +55,20 @@ class DioUtils {
     }
    return result;
   }
+
+
+  static Future post<T>(String url,
+      {parameters,
+        method}) async {
+    return _request<T>(url, parameters: parameters, method: POST);
+  }
+
+  static Future get<T>(String url,
+      {parameters,
+        method}) async {
+   return _request<T>(url, parameters: parameters, method: GET);
+  }
+
 
   /// 创建 dio 实例对象
   static Dio createInstance() {

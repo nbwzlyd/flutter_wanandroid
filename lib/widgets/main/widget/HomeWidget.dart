@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/res/gaps.dart';
@@ -6,6 +9,9 @@ import 'package:flutter_app/widgets/main/bean/ContentEntity.dart';
 import 'package:flutter_app/widgets/main/repository/main_repository.dart';
 import 'package:flutter_app/widgets/main/widget/HomeBannerWidget.dart';
 import 'package:flutter_app/widgets/main/widget/contentWidget.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_easyrefresh/material_header.dart';
+import 'package:toast/toast.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
@@ -13,32 +19,62 @@ class HomeWidget extends StatefulWidget {
     return new HomeState();
   }
 }
+
 class HomeState extends State<StatefulWidget> {
   BannerBean bannerBean;
   ContentEntity contentEntity;
-  int page=0;
+  int page = 0;
+  AsyncSnapshot<ContentEntity> _snapshot ;
+
+  StreamController<ContentEntity> _streamController = new StreamController();
 
   @override
   void initState() {
     super.initState();
     _getBannerData();
-    _getItemData(page);
+    _getItemData(page, false);
+  }
+
+  @override
+  void dispose() {
+    _streamController.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    child:
-    return new RefreshIndicator(
+
+    Widget list = EasyRefresh(
       onRefresh: _onRefresh,
+      onLoad: _onLoad,
       child: ListView.builder(
         itemBuilder: (BuildContext ctx, int index) {
           if (index == 0) {
             return HomeBannerWidget(bannerBean);
           }
-          return ContentWidget(contentEntity, index - 1);
+          debugPrint(_snapshot.data.data.datas[0].title);
+          return ContentWidget(_snapshot.data, index - 1);
         },
         shrinkWrap: true,
         itemCount: _getItemCount(),
+      ),
+    );
+    child:
+    return Center(
+      child: StreamBuilder(
+        stream: _streamController.stream,
+        builder: (BuildContext ctx, AsyncSnapshot<ContentEntity> snapshot) {
+          _snapshot = snapshot;
+          if (snapshot.connectionState == ConnectionState.active) {
+            return list;
+          } else if(snapshot.connectionState==ConnectionState.waiting){
+            return CircularProgressIndicator();
+          }
+          else{
+            Toast.show("没有更多数据了~", context);
+            return list;
+          }
+        },
       ),
     );
   }
@@ -51,10 +87,8 @@ class HomeState extends State<StatefulWidget> {
     }
   }
 
-
-
   int _getHeaderCount() {
-    if (bannerBean!=null && bannerBean.data != null) {
+    if (bannerBean != null && bannerBean.data != null) {
       if (bannerBean.data.isNotEmpty) {
         return 1;
       }
@@ -70,15 +104,36 @@ class HomeState extends State<StatefulWidget> {
     });
   }
 
-  void _getItemData(int index) {
+  void _getItemData(int index, bool load) {
     MainRepository().getContent(index).then((contentEntity) {
+      if (!mounted) {
+        return;
+      }
       setState(() {
-        this.contentEntity = contentEntity;
+        if (load) {
+          this.contentEntity.data.datas.addAll(contentEntity.data.datas);
+        } else {
+          if (index == 0) {
+            this.contentEntity = contentEntity;
+          } else {
+            this
+                .contentEntity
+                .data
+                .datas
+                .insertAll(0, contentEntity.data.datas);
+          }
+        }
+        _streamController.sink.add(this.contentEntity);
+//        _streamController.sink.close();
       });
     });
   }
 
   Future<Null> _onRefresh() async {
-    _getItemData(page++);
+   _getItemData(++page, false);
+  }
+
+  Future _onLoad() async {
+    _getItemData(++page, true);
   }
 }

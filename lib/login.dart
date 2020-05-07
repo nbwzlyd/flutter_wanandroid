@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/res/gaps.dart';
 import 'package:flutter_app/widgets/api/WanAndroidApi.dart';
 import 'package:flutter_app/widgets/api/util/dio_util.dart';
 import 'package:flutter_app/widgets/login/LoginItem.dart';
+import 'package:flutter_app/widgets/login/bean/UserBeanEntity.dart';
 import 'package:flutter_app/widgets/login/repository/login_repository.dart';
 import 'package:flutter_app/widgets/main/MainPage.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:toast/toast.dart';
 
 void main() => runApp(MyApp());
@@ -36,12 +40,15 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController accountController = new TextEditingController();
   TextEditingController pwdController = new TextEditingController();
 
+  final StreamController<UserBeanEntity> streamController = StreamController();
+
   String _pwd, _account;
 
   @override
   void dispose() {
     accountController.dispose();
     pwdController.dispose();
+    streamController.close();
     super.dispose();
   }
 
@@ -101,22 +108,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _login() {
-    LoginRepository().login(
-        new LoginBody(_account, _pwd)).then((userBeanData) {
+    LoginRepository()
+        .login(new LoginBody(_account, _pwd))
+        .then((userBeanData) {
       if (userBeanData.errorCode == -1) {
-        Toast.show(
-            userBeanData.errorMsg, context, duration: Toast.LENGTH_SHORT,
-            gravity: Toast.CENTER);
+        Toast.show(userBeanData.errorMsg, context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
       } else {
-        Toast.show(
-            "登录成功", context, duration: Toast.LENGTH_SHORT,
-            gravity: Toast.CENTER);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => MainPage()));
+        Toast.show("登录成功", context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MainPage()));
       }
     });
   }
 }
+
 class LoginBody {
   final String accountName;
   final String passWord;

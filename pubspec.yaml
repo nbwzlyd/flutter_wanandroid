@@ -31,6 +31,10 @@ dependencies:
   cached_network_image: ^2.0.0-rc
   #toast
   toast: ^0.1.4
+  #上拉加载下拉刷新
+  flutter_easyrefresh: ^2.1.1
+  #webview
+  webview_flutter: ^0.3.21
 
 
 

@@ -9,9 +9,8 @@ class BannerRepository{
 
   Future<BannerBean> getBanner() async {
     BannerBean bannerBean;
-    await DioUtils.request<Map<String, dynamic>>(
-        WanAndroidApi.BANNER, method: DioUtils.GET).then((result) {
-          print("BannerRepository===>$result");
+    await DioUtils.get<Map<String, dynamic>>(
+        WanAndroidApi.BANNER).then((result) {
       bannerBean = BannerBean.fromJson(jsonDecode(result));
     }).catchError((error) {
       bannerBean = new BannerBean();
@@ -23,8 +22,8 @@ class BannerRepository{
 class MainRepository{
   Future<ContentEntity> getContent(int page) async{
     ContentEntity contentEntity;
-    await DioUtils.request<Map<String, dynamic>>(
-      WanAndroidApi.getPath(page: page,path: WanAndroidApi.ARTICLE_LIST),method:DioUtils.GET
+    await DioUtils.get<Map<String, dynamic>>(
+      WanAndroidApi.getPath(page: page,path: WanAndroidApi.ARTICLE_LIST)
     ).then((result){
       contentEntity = ContentEntity.fromJson(jsonDecode(result));
     });
