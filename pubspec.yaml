@@ -24,15 +24,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   #网络请求
-  dio: ^3.0.0
+  dio: ^4.0.6
   #首页轮播图
   flutter_swiper: ^1.1.6
   #图片
-  cached_network_image: ^2.0.0-rc
+  cached_network_image: ^3.2.1
   #toast
   toast: ^0.1.4
   #上拉加载下拉刷新
-  flutter_easyrefresh: ^2.1.1
+  flutter_easyrefresh: ^2.2.1
   #webview
   webview_flutter: ^0.3.21
 

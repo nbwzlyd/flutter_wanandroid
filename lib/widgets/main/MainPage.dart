@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/widgets/main/widget/HomeBannerWidget.dart';
 import 'package:flutter_app/widgets/main/widget/HomeWidget.dart';
-import 'package:flutter_app/widgets/main/widget/contentWidget.dart';
 import 'package:flutter_app/widgets/user/UserProfilePage.dart';
 
 class MainPage extends StatefulWidget {
@@ -38,15 +35,15 @@ class MainPageState extends State<StatefulWidget> {
     Widget bottomTabBar = BottomNavigationBar(
       items: [
         BottomNavigationBarItem(
-            icon: Icon(Icons.home), title: Text(bottomBarTitles[0])),
+            icon: Icon(Icons.home), label: bottomBarTitles[0]),
         BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance), title: Text(bottomBarTitles[1])),
+            icon: Icon(Icons.account_balance), label: bottomBarTitles[1]),
         BottomNavigationBarItem(
-            icon: Icon(Icons.school), title: Text(bottomBarTitles[2])),
+            icon: Icon(Icons.school), label: bottomBarTitles[2]),
         BottomNavigationBarItem(
-            icon: Icon(Icons.extension), title: Text(bottomBarTitles[3])),
+            icon: Icon(Icons.extension), label: bottomBarTitles[3]),
         BottomNavigationBarItem(
-            icon: Icon(Icons.account_box), title: Text(bottomBarTitles[4]))
+            icon: Icon(Icons.account_box), label: bottomBarTitles[4])
       ],
       type: BottomNavigationBarType.fixed,
       currentIndex: _currentIndex,
