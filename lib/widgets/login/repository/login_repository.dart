@@ -13,8 +13,6 @@ class LoginRepository {
             parameters: loginBody.queryParameters2Map())
         .then((result) {
       userBeanEntity = UserBeanEntity.fromJson(jsonDecode(result));
-
-
     }).catchError((onError){
     });
 

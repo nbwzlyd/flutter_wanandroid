@@ -1,5 +1,5 @@
 class WanAndroidApi {
-  static const baseUrl = "https://www.wanandroid.com/";
+  static const baseUrl = "https://wanandroid.com/";
   static const String BANNER = "banner/json";
 
   /// 最新项目tab (首页的第二个tab) http://wanandroid.com/article/listproject/0/json
@@ -46,4 +46,22 @@ class WanAndroidApi {
     print("getPath=====>${sb.toString()}");
     return sb.toString();
   }
+
+  static String getWxArticleDetail({String path: '', int page, int officialAccountId,String resType: 'json'}) {
+    StringBuffer sb = new StringBuffer(path);
+
+    if (officialAccountId != null) {
+      sb.write('/$officialAccountId');
+    }
+    if (page != null) {
+      sb.write('/$page');
+    }
+    if (resType != null && resType.isNotEmpty) {
+      sb.write('/$resType');
+    }
+    print("getPath=====>${sb.toString()}");
+    return sb.toString();
+  }
+
+
 }

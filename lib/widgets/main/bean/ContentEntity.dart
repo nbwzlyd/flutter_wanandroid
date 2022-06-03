@@ -1,12 +1,12 @@
 class ContentEntity {
-  Data data;
+  Deatail data;
   int errorCode;
   String errorMsg;
 
   ContentEntity({this.data, this.errorCode, this.errorMsg});
 
   ContentEntity.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new Deatail.fromJson(json['data']) : null;
     errorCode = json['errorCode'];
     errorMsg = json['errorMsg'];
   }
@@ -22,7 +22,7 @@ class ContentEntity {
   }
 }
 
-class Data {
+class Deatail {
   int curPage;
   List<Datas> datas;
   int offset;
@@ -31,7 +31,7 @@ class Data {
   int size;
   int total;
 
-  Data(
+  Deatail(
       {this.curPage,
         this.datas,
         this.offset,
@@ -40,7 +40,7 @@ class Data {
         this.size,
         this.total});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Deatail.fromJson(Map<String, dynamic> json) {
     curPage = json['curPage'];
     if (json['datas'] != null) {
       datas = new List<Datas>();

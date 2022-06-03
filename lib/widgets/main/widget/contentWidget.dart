@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/res/colors.dart';
 import 'package:flutter_app/res/dimens.dart';
@@ -95,15 +94,15 @@ class ContentWidget extends StatelessWidget {
 Widget _buildTags(List<Tags> tags) {
   List<Widget> list = List();
   tags.forEach((tag) {
-    list.add(BiaoQian(tag.name));
+    list.add(_LabelWidget(tag.name));
   });
   return new Row(
     children: list,
   );
 }
 
-class BiaoQian extends StatelessWidget {
-  BiaoQian(this.content, {Key key}) : super(key: key);
+class _LabelWidget extends StatelessWidget {
+  _LabelWidget(this.content, {Key key}) : super(key: key);
   final String content;
 
   @override

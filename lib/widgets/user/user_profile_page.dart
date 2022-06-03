@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_app/res/gaps.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -15,14 +13,14 @@ class UserProfileState extends State<StatefulWidget> {
   Widget build(BuildContext context) {
     Widget userInfo = Container(
       width: double.infinity,
-      height: 150.0,
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+      height: 140.0,
+      padding: EdgeInsets.only(left: 16, right: 16),
       color: Colors.blue,
       child: UserProfileWidget(),
     );
 
     Widget listItems = Container(
-      margin: EdgeInsets.only(top: 130),
+      margin: EdgeInsets.only(top: 120),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -67,16 +65,17 @@ class UserProfileState2 extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return new Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         CircleAvatar(
           radius: 45.0,
           backgroundImage: NetworkImage(
-              "http://pic31.nipic.com/20130711/8952533_164845225000_2.jpg"),
+              "http://api.btstu.cn/sjtx/api.php?lx=c1&format=images&method=mobile"),
         ),
         Gaps.hGap15,
         new Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text("账户名",
                 style: TextStyle(

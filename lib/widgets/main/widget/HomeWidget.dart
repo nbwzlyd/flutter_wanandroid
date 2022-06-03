@@ -124,7 +124,6 @@ class HomeState extends State<StatefulWidget> {
           }
         }
         _streamController.sink.add(this.contentEntity);
-//        _streamController.sink.close();
       });
     });
   }

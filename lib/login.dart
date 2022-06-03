@@ -8,35 +8,32 @@ import 'package:flutter_app/widgets/api/util/dio_util.dart';
 import 'package:flutter_app/widgets/login/LoginItem.dart';
 import 'package:flutter_app/widgets/login/bean/UserBeanEntity.dart';
 import 'package:flutter_app/widgets/login/repository/login_repository.dart';
-import 'package:flutter_app/widgets/main/MainPage.dart';
+import 'package:flutter_app/widgets/main/page/MainPage.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:toast/toast.dart';
-
-void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginPageState extends State<LoginPage> {
   TextEditingController accountController = new TextEditingController();
   TextEditingController pwdController = new TextEditingController();
 
@@ -108,9 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _login() {
-    LoginRepository()
-        .login(new LoginBody(_account, _pwd))
-        .then((userBeanData) {
+    LoginRepository().login(new LoginBody(_account, _pwd)).then((userBeanData) {
       if (userBeanData.errorCode == -1) {
         Toast.show(userBeanData.errorMsg, context,
             duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
@@ -127,7 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
 class LoginBody {
   final String accountName;
   final String passWord;
+
   LoginBody(this.accountName, this.passWord);
+
   Map<String, String> queryParameters2Map() =>
       {"password": passWord, "username": accountName};
 }

@@ -41,15 +41,11 @@ class DioUtils {
       {parameters,
       method}) async {
     Dio dio = createInstance();
-    /// 打印:请求地址-请求方式-请求参数
-    print('请求地址：【' + method + '  ' + dio.options.baseUrl + '】');
-    print('请求参数：' + parameters.toString());
     //请求结果
     var result;
     try {
       Response response = await dio.request(url, queryParameters: parameters, options: Options(method: method));
       result = response.data;
-      print('响应数据：' + response.toString());
     } on DioError catch (e) {
       print('请求出错：' + e.toString());
     }
