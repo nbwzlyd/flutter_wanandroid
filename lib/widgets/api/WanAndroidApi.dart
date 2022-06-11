@@ -25,6 +25,8 @@ class WanAndroidApi {
   /// 在某个公众号中搜索历史文章 http://wanandroid.com/wxarticle/list/405/1/json?k=Java
   static const String WXARTICLE_LIST = "wxarticle/list";
 
+  static const String WEN_DA = "wenda/list";
+
   static const String user_register = "user/register"; //注册
   static const String user_login = "user/login"; //登录
   static const String user_logout = "user/logout"; //退出
@@ -47,11 +49,11 @@ class WanAndroidApi {
     return sb.toString();
   }
 
-  static String getWxArticleDetail({String path: '', int page, int officialAccountId,String resType: 'json'}) {
+  static String getPath2({String path: '', int page, int id,String resType: 'json'}) {
     StringBuffer sb = new StringBuffer(path);
 
-    if (officialAccountId != null) {
-      sb.write('/$officialAccountId');
+    if (id != null) {
+      sb.write('/$id');
     }
     if (page != null) {
       sb.write('/$page');

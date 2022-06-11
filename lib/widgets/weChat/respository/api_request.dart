@@ -26,8 +26,8 @@ class WechatDetailRepository {
       int officialAccountId, int page) async {
     ContentEntity officialAccountBean;
 
-    await DioUtils.get<Map<String, dynamic>>(WanAndroidApi.getWxArticleDetail(
-            officialAccountId: officialAccountId,
+    await DioUtils.get<Map<String, dynamic>>(WanAndroidApi.getPath2(
+            id: officialAccountId,
             page: page,
             path: WanAndroidApi.WXARTICLE_LIST))
         .then((result) {

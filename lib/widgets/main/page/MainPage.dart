@@ -6,6 +6,8 @@ import 'package:flutter_app/widgets/main/widget/HomeWidget.dart';
 import 'package:flutter_app/widgets/user/user_profile_page.dart';
 import 'package:toast/toast.dart';
 
+import '../../questionAndAnswer/question_and_answer_page.dart';
+
 void main() => runApp(MainPage());
 
 class MainPage extends StatelessWidget {
@@ -28,12 +30,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MainPageState extends State<StatefulWidget> {
-  final bottomBarTitles = ["首页", "体系", "公众号", "项目", "我的"];
+  final bottomBarTitles = ["首页", "体系", "公众号", "问答", "我的"];
   final pages = <Widget>[
     HomeWidget(),
     HomeWidget(),
     OfficialAccountPage(),
-    HomeWidget(),
+    QuestionAndAnswer(),
     UserProfilePage(),
   ];
 

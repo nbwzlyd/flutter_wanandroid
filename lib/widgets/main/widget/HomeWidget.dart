@@ -52,7 +52,6 @@ class HomeState extends State<StatefulWidget> {
           if (index == 0) {
             return HomeBannerWidget(bannerBean);
           }
-          debugPrint(_snapshot.data.data.datas[0].title);
           return ContentWidget(_snapshot.data, index - 1);
         },
         shrinkWrap: true,
