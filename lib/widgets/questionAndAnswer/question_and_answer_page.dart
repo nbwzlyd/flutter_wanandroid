@@ -37,25 +37,42 @@ class _QuestionAndAnswerPageState extends State<QuestionAndAnswerPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Widget staggeredView = EasyRefresh(
-    //   child: MasonryGridView.count(
-    //     crossAxisCount: 2,
-    //     itemCount:
-    //         mDatas == null || mDatas.datas == null ? 0 : mDatas.datas.length,
-    //     itemBuilder: (BuildContext build, int index) => QuesAndAnswerView(
-    //         quesAndAnswerDeatailBean: mDatas.datas.elementAt(index)),
-    //     mainAxisSpacing: 3,
-    //     ////纵向元素间距
-    //     crossAxisSpacing: 3,
-    //     //// 横向元素间距
-    //     shrinkWrap: true, //自适应
-    //   ),
-    //   onLoad: () async {
-    //     _page++;
-    //     getDetailData(_page);
-    //   },
-    // );
+    return Scaffold(
+      appBar: PreferredSize(
+        child: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          title: Text(
+            "问答",
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+        preferredSize: Size.fromHeight(47),
+      ),
+      body: Center(
+        child: StreamBuilder(
+          //构建一个任务流
+          stream: _streamController.stream,
+          builder: (BuildContext ctx,
+              AsyncSnapshot<QuesAndAnswerDeatailBean> snapshot) {
+            _snapshot = snapshot;
+            if (snapshot.hasData) {
+              return getListView();
+            }
+            if (snapshot.hasError) {
+              return Text(snapshot.error);
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              return getListView();
+            }
+            return CircularProgressIndicator();
+          },
+        ),
+      ),
+    );
+  }
 
+  Widget getListView() {
     Widget staggeredView = EasyRefresh(
       child: ListView.builder(
           itemCount:
@@ -75,27 +92,7 @@ class _QuestionAndAnswerPageState extends State<QuestionAndAnswerPage> {
           loadFailedText: "加载失败",
           infoText: "更新于 ${DateTime.now().hour}:${DateTime.now().minute}"),
     );
-
-    return Center(
-      child: StreamBuilder(
-        //构建一个任务流
-        stream: _streamController.stream,
-        builder: (BuildContext ctx,
-            AsyncSnapshot<QuesAndAnswerDeatailBean> snapshot) {
-          _snapshot = snapshot;
-          if (snapshot.hasData) {
-            return staggeredView;
-          }
-          if (snapshot.hasError) {
-            return Text(snapshot.error);
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            return staggeredView;
-          }
-          return CircularProgressIndicator();
-        },
-      ),
-    );
+    return staggeredView;
   }
 
   getDetailData() {

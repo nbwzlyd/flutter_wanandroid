@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/api/util/log.dart';
 import 'package:flutter_app/widgets/bodySystem/bean/project_article_bean.dart';
@@ -21,11 +20,12 @@ class ProjectWidget extends StatefulWidget {
 class _ProjectWidgetState extends State<ProjectWidget> {
   ProjectTreeBean _projectTreeBean;
   int _currCid = -1;
-  AsyncSnapshot<ProjectArticleDetailBean> _snapshot;
+  ProjectArticleDetailBean _projectArticleDetailBean;
   StreamController<ProjectArticleDetailBean> _streamController =
-  StreamController();
+      StreamController();
 
   var _page = 1;
+  var _currTotalPage = -1; //当前类目下的最大页数
 
   @override
   void initState() {
@@ -41,16 +41,75 @@ class _ProjectWidgetState extends State<ProjectWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Widget staggeredView = EasyRefresh(
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            color: Colors.white,
+            width: MediaQuery.of(context).size.width,
+            child: ListView.separated(
+              itemCount:
+                  _projectTreeBean == null || _projectTreeBean.data == null
+                      ? 0
+                      : _projectTreeBean.data.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext ctx, int index) {
+                var treeBean = _projectTreeBean.data.elementAt(index);
+                return Container(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      child: Text(treeBean.name),
+                      onPressed: () {
+                        _page = 1;
+                        getDetailData(_page, treeBean.id);
+                      },
+                    ));
+              },
+              separatorBuilder: (BuildContext ctx, int index) {
+                return Container(
+                  margin: EdgeInsets.fromLTRB(5, 2, 2, 5),
+                  height: 1,
+                  color: Colors.lightBlue[50],
+                );
+              },
+            ),
+          ),
+          flex: 1,
+        ),
+        Expanded(
+          child: Center(
+            child: StreamBuilder(
+              //构建一个任务流
+              stream: _streamController.stream,
+              builder: (BuildContext ctx,
+                  AsyncSnapshot<ProjectArticleDetailBean> snapshot) {
+                if (snapshot.hasData) {
+                  return getStagerdView();
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else {
+                  Toast.show("没有更多数据了~", context);
+                  return Center();
+                }
+              },
+            ),
+          ),
+          flex: 5,
+        ),
+      ],
+    );
+  }
+
+  Widget getStagerdView() {
+    return EasyRefresh(
       child: MasonryGridView.count(
         crossAxisCount: 2,
-        itemCount: _snapshot == null ||
-            _snapshot.data == null ||
-            _snapshot.data.datas == null
+        itemCount: _projectArticleDetailBean == null
             ? 0
-            : _snapshot.data.datas.length,
+            : _projectArticleDetailBean.datas.length,
         itemBuilder: (BuildContext build, int index) {
-          var detailBean = _snapshot.data.datas.elementAt(index);
+          var detailBean = _projectArticleDetailBean.datas.elementAt(index);
           return Card(
             color: Colors.white,
             elevation: 8,
@@ -86,9 +145,7 @@ class _ProjectWidgetState extends State<ProjectWidget> {
           );
         },
         mainAxisSpacing: 3,
-        ////纵向元素间距
         crossAxisSpacing: 3,
-        //// 横向元素间距
         shrinkWrap: true, //自适应
       ),
       onLoad: () async {
@@ -96,81 +153,23 @@ class _ProjectWidgetState extends State<ProjectWidget> {
         getDetailData(_page, _currCid);
       },
     );
-
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            color: Colors.white,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-            child: ListView.separated(
-              itemCount:
-              _projectTreeBean == null || _projectTreeBean.data == null
-                  ? 0
-                  : _projectTreeBean.data.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext ctx, int index) {
-                var treeBean = _projectTreeBean.data.elementAt(index);
-                if (_currCid == -1) {
-                  //记录下第一个
-                  _currCid = treeBean.id;
-                }
-                return Container(
-                    alignment: Alignment.center,
-                    child: TextButton(
-                      child: Text(treeBean.name),
-                      onPressed: () {
-                        getDetailData(_page, treeBean.id);
-                      },
-                    ));
-              },
-              separatorBuilder: (BuildContext ctx, int index) {
-                return Container(
-                  margin: EdgeInsets.fromLTRB(5, 2, 2, 5),
-                  height: 1,
-                  color: Colors.lightBlue[50],
-                );
-              },
-            ),
-          ),
-          flex: 1,
-        ),
-        Expanded(
-          child: Center(
-            child: StreamBuilder(
-              //构建一个任务流
-              stream: _streamController.stream,
-              builder: (BuildContext ctx,
-                  AsyncSnapshot<ProjectArticleDetailBean> snapshot) {
-                _snapshot = snapshot;
-                if (_snapshot.hasData) {
-                  return staggeredView;
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else {
-                  Toast.show("没有更多数据了~", context);
-                  return Center();
-                }
-              },
-            ),
-          ),
-          flex: 5,
-        ),
-      ],
-    );
   }
 
   void getDetailData(int _page, int _currCid) {
-    if (_page == 0 || _currCid == -1) {
+    if (_page == 0 ||
+        _currCid == -1 ||
+        (_currTotalPage != -1 && _page >= _currTotalPage)) {
       return;
     }
     BodySystemRespository().getProjectArticle(_page, _currCid).then((value) {
       setState(() {
-        _streamController.sink.add(value.data);
+        if (_page == 1) {
+          _currTotalPage = value.data.pageCount;
+          _projectArticleDetailBean = value.data;
+        } else {
+          _projectArticleDetailBean.datas.addAll(value.data.datas);
+        }
+        _streamController.sink.add(_projectArticleDetailBean);
       });
     });
   }
@@ -179,9 +178,7 @@ class _ProjectWidgetState extends State<ProjectWidget> {
     BodySystemRespository().getProjectTree().then((value) {
       setState(() {
         _projectTreeBean = value;
-        _currCid = _projectTreeBean.data
-            .elementAt(0)
-            .id;
+        _currCid = _projectTreeBean.data.elementAt(0).id;
         getDetailData(_page, _currCid);
       });
     });

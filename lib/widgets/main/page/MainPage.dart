@@ -73,10 +73,9 @@ class MainPageState extends State<StatefulWidget> {
     );
     return Scaffold(
         bottomNavigationBar: bottomTabBar,
-        // body: LazyLoadIndexedStack(
-        //   index: _currentIndex,
-        //   children: pages,
-        // ));
-        body: pages[_currentIndex]);
+        body: LazyLoadIndexedStack(
+          index: _currentIndex,
+          children: pages,
+        ));
   }
 }
