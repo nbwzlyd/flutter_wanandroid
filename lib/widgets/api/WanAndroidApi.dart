@@ -66,4 +66,21 @@ class WanAndroidApi {
   }
 
 
+
+  static String getPath3({String path: '', int page, int cid,String resType: 'json'}) {
+    StringBuffer sb = new StringBuffer(path);
+    if (page != null) {
+      sb.write('/$page');
+    }
+    if (resType != null && resType.isNotEmpty) {
+      sb.write('/$resType');
+    }
+    if (cid != null) {
+      sb.write('?cid=$cid');
+    }
+    print("getPath=====>${sb.toString()}");
+    return sb.toString();
+  }
+
+
 }

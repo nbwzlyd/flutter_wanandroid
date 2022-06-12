@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/widgets/weChat/widget/we_chat_detail_widget.dart';
-import '../bean/official_account_bean.dart';
-import '../respository/api_request.dart';
-import '../../main/widget/tabBarIndicator.dart';
+import 'bean/official_account_bean.dart';
+import 'respository/api_request.dart';
+import '../main/widget/tabBarIndicator.dart';
 
 class OfficialAccountPage extends StatefulWidget {
   @override

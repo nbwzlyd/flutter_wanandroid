@@ -9,24 +9,24 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:toast/toast.dart';
 import 'widget/ques_and_answer_card_view.dart';
 
-class QuestionAndAnswer extends StatefulWidget {
-  const QuestionAndAnswer({Key key}) : super(key: key);
+class QuestionAndAnswerPage extends StatefulWidget {
+  const QuestionAndAnswerPage({Key key}) : super(key: key);
 
   @override
-  State<QuestionAndAnswer> createState() => _QuestionAndAnswerState();
+  State<QuestionAndAnswerPage> createState() => _QuestionAndAnswerPageState();
 }
 
-class _QuestionAndAnswerState extends State<QuestionAndAnswer> {
+class _QuestionAndAnswerPageState extends State<QuestionAndAnswerPage> {
   StreamController<QuesAndAnswerDeatailBean> _streamController =
       new StreamController();
-
+  AsyncSnapshot<QuesAndAnswerDeatailBean> _snapshot = AsyncSnapshot.waiting();
   QuesAndAnswerDeatailBean mDatas;
   int _page = 1;
 
   @override
   void initState() {
     super.initState();
-    getDetailData(_page);
+    getDetailData();
   }
 
   @override
@@ -37,23 +37,43 @@ class _QuestionAndAnswerState extends State<QuestionAndAnswer> {
 
   @override
   Widget build(BuildContext context) {
+    // Widget staggeredView = EasyRefresh(
+    //   child: MasonryGridView.count(
+    //     crossAxisCount: 2,
+    //     itemCount:
+    //         mDatas == null || mDatas.datas == null ? 0 : mDatas.datas.length,
+    //     itemBuilder: (BuildContext build, int index) => QuesAndAnswerView(
+    //         quesAndAnswerDeatailBean: mDatas.datas.elementAt(index)),
+    //     mainAxisSpacing: 3,
+    //     ////纵向元素间距
+    //     crossAxisSpacing: 3,
+    //     //// 横向元素间距
+    //     shrinkWrap: true, //自适应
+    //   ),
+    //   onLoad: () async {
+    //     _page++;
+    //     getDetailData(_page);
+    //   },
+    // );
+
     Widget staggeredView = EasyRefresh(
-      child: MasonryGridView.count(
-        crossAxisCount: 2,
-        itemCount:
-            mDatas == null || mDatas.datas == null ? 0 : mDatas.datas.length,
-        itemBuilder: (BuildContext build, int index) => QuesAndAnswerView(
-            quesAndAnswerDeatailBean: mDatas.datas.elementAt(index)),
-        mainAxisSpacing: 3,
-        ////纵向元素间距
-        crossAxisSpacing: 3,
-        //// 横向元素间距
-        shrinkWrap: true, //自适应
-      ),
+      child: ListView.builder(
+          itemCount:
+              mDatas == null || mDatas.datas == null ? 0 : mDatas.datas.length,
+          itemBuilder: (BuildContext context, int index) => QuesAndAnswerView(
+              quesAndAnswerDeatailBean: mDatas.datas.elementAt(index))),
       onLoad: () async {
         _page++;
-        getDetailData(_page);
+        getDetailData();
       },
+      footer: ClassicalFooter(
+          textColor: Colors.blueAccent,
+          loadedText: _snapshot.connectionState == ConnectionState.done
+              ? "全部加载完毕"
+              : "加载成功",
+          loadingText: "正在加载中...",
+          loadFailedText: "加载失败",
+          infoText: "更新于 ${DateTime.now().hour}:${DateTime.now().minute}"),
     );
 
     return Center(
@@ -62,6 +82,7 @@ class _QuestionAndAnswerState extends State<QuestionAndAnswer> {
         stream: _streamController.stream,
         builder: (BuildContext ctx,
             AsyncSnapshot<QuesAndAnswerDeatailBean> snapshot) {
+          _snapshot = snapshot;
           if (snapshot.hasData) {
             return staggeredView;
           }
@@ -77,12 +98,12 @@ class _QuestionAndAnswerState extends State<QuestionAndAnswer> {
     );
   }
 
-  getDetailData(int page) {
-    QuesAndAnswerRepository().getWendaList(page).then((result) => {
+  getDetailData() {
+    QuesAndAnswerRepository().getWendaList(_page).then((result) => {
           setState(() {
             if (result.errorCode < 0) {
               _streamController.sink.addError("网络请求出错");
-            } else if (result.data.curPage > result.data.pageCount) {
+            } else if (_page >= result.data.pageCount) {
               _streamController.sink.close(); //全部结束
             } else {
               if (result.data.curPage == 1) {

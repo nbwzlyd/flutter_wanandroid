@@ -13,7 +13,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:toast/toast.dart';
 
-class HomeWidget extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return new HomeState();
@@ -24,7 +24,7 @@ class HomeState extends State<StatefulWidget> {
   BannerBean bannerBean;
   ContentEntity contentEntity;
   int page = 0;
-  AsyncSnapshot<ContentEntity> _snapshot ;
+  AsyncSnapshot<ContentEntity> _snapshot;
 
   StreamController<ContentEntity> _streamController = new StreamController();
 
@@ -43,7 +43,6 @@ class HomeState extends State<StatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget list = EasyRefresh(
       onRefresh: _onRefresh,
       onLoad: _onLoad,
@@ -59,23 +58,45 @@ class HomeState extends State<StatefulWidget> {
       ),
     );
     child:
-    return Center(
-      child: StreamBuilder(
-        stream: _streamController.stream,
-        builder: (BuildContext ctx, AsyncSnapshot<ContentEntity> snapshot) {
-          _snapshot = snapshot;
-          if (snapshot.connectionState == ConnectionState.active) {
-            return list;
-          } else if(snapshot.connectionState==ConnectionState.waiting){
-            return CircularProgressIndicator();
-          }
-          else{
-            Toast.show("没有更多数据了~", context);
-            return list;
-          }
-        },
-      ),
-    );
+    return Scaffold(
+        appBar: PreferredSize(
+          child: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            title: Text(
+              "首页",
+              style: TextStyle(fontSize: 16),
+            ),
+            actions: [
+              Container(
+                width: 50,
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  child: Icon(Icons.search),
+                  onTap: () {},
+                ),
+                margin: EdgeInsets.only(right: 16),
+              )
+            ],
+          ),
+          preferredSize: Size.fromHeight(47),
+        ),
+        body: Center(
+          child: StreamBuilder(
+            stream: _streamController.stream,
+            builder: (BuildContext ctx, AsyncSnapshot<ContentEntity> snapshot) {
+              _snapshot = snapshot;
+              if (snapshot.connectionState == ConnectionState.active) {
+                return list;
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else {
+                Toast.show("没有更多数据了~", context);
+                return list;
+              }
+            },
+          ),
+        ));
   }
 
   int _getItemCount() {
@@ -128,7 +149,7 @@ class HomeState extends State<StatefulWidget> {
   }
 
   Future<Null> _onRefresh() async {
-   _getItemData(++page, false);
+    _getItemData(++page, false);
   }
 
   Future _onLoad() async {

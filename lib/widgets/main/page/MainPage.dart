@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/login.dart';
+import 'package:flutter_app/widgets/bodySystem/body_system_page.dart';
 import 'package:flutter_app/widgets/main/SearchWidget.dart';
-import 'package:flutter_app/widgets/weChat/pages/official_account_page.dart';
+import 'package:flutter_app/widgets/weChat/official_account_page.dart';
 import 'package:flutter_app/widgets/main/widget/HomeWidget.dart';
 import 'package:flutter_app/widgets/user/user_profile_page.dart';
+import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:toast/toast.dart';
 
 import '../../questionAndAnswer/question_and_answer_page.dart';
@@ -32,14 +34,15 @@ class MyHomePage extends StatefulWidget {
 class MainPageState extends State<StatefulWidget> {
   final bottomBarTitles = ["首页", "体系", "公众号", "问答", "我的"];
   final pages = <Widget>[
-    HomeWidget(),
-    HomeWidget(),
+    HomePage(),
+    BodySystemPage(),
     OfficialAccountPage(),
-    QuestionAndAnswer(),
+    QuestionAndAnswerPage(),
     UserProfilePage(),
   ];
 
   int _currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +59,7 @@ class MainPageState extends State<StatefulWidget> {
         BottomNavigationBarItem(
             icon: Icon(Icons.school), label: bottomBarTitles[2]),
         BottomNavigationBarItem(
-            icon: Icon(Icons.extension), label: bottomBarTitles[3]),
+            icon: Icon(Icons.question_answer), label: bottomBarTitles[3]),
         BottomNavigationBarItem(
             icon: Icon(Icons.account_box), label: bottomBarTitles[4])
       ],
@@ -69,29 +72,11 @@ class MainPageState extends State<StatefulWidget> {
       }),
     );
     return Scaffold(
-        appBar: PreferredSize(
-          child:AppBar(
-            elevation: 0,
-            centerTitle: true,
-            title: Text(bottomBarTitles[_currentIndex],style: TextStyle(fontSize: 16),),
-            actions: [
-              Container(
-                width: 50,
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  child: Icon(Icons.search),
-                  onTap:() {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => OfficialAccountPage()));
-                  },
-                ),
-                margin: EdgeInsets.only(right: 16),
-              )
-            ],
-          ),
-          preferredSize: Size.fromHeight(47),
-        ),
         bottomNavigationBar: bottomTabBar,
+        // body: LazyLoadIndexedStack(
+        //   index: _currentIndex,
+        //   children: pages,
+        // ));
         body: pages[_currentIndex]);
   }
 }
